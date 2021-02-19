@@ -1,0 +1,13 @@
+<div class="form-group">
+    <input 
+        [class.is-invalid]='ngControl.touched && ngControl.invalid'
+        type={{type}}
+        class="form-control" 
+        [formControl]="ngControl.control"
+        placeholder={{label}}>
+
+    <div *ngIf="ngControl.control.errors?.required" class="invalid-feedback">{{label}} obrigadorio.</div>   
+    <div *ngIf="ngControl.control.errors?.minlength" class="invalid-feedback">{{label}} deve ter no minimo {{ngControl.control.errors.minlength['requiredLength']}} caracteres.</div>
+    <div *ngIf="ngControl.control.errors?.maxlength" class="invalid-feedback">{{label}} deve ter no maximo {{ngControl.control.errors.maxlength['requiredLength']}} caracteres.</div>   
+    <div *ngIf="ngControl.control.errors?.isMatching" class="invalid-feedback">A senha esta diferente da anterior.</div>   
+</div>
