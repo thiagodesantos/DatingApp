@@ -3,6 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { Member } from 'src/app/_models/member';
 import { MembersService } from 'src/app/_services/members.service';
+import { strings as stringsPtBr } from "ngx-timeago/language-strings/pt-br"
+import { TimeagoIntl } from 'ngx-timeago';
+
+
+
 
 @Component({
   selector: 'app-member-detail',
@@ -14,7 +19,10 @@ export class MemberDetailComponent implements OnInit {
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
 
-  constructor(private memberService: MembersService, private route: ActivatedRoute) { }
+  constructor(private memberService: MembersService, private route: ActivatedRoute, public intl: TimeagoIntl) {
+    intl.strings = stringsPtBr;
+    intl.changes.next();
+   }
 
   ngOnInit(): void {
     this.loadMember();

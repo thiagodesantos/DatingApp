@@ -6,6 +6,9 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { TimeagoModule, TimeagoIntl, TimeagoFormatter, TimeagoCustomFormatter } from 'ngx-timeago';
 
 
 @NgModule({
@@ -20,6 +23,9 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     NgxGalleryModule,
     FileUploadModule,
     BsDatepickerModule.forRoot(),
+    PaginationModule.forRoot(),
+    ButtonsModule.forRoot(),
+    TimeagoModule.forRoot({formatter: { provide: TimeagoFormatter, useClass: TimeagoCustomFormatter },}),
   ],
   exports: [
     BsDropdownModule,
@@ -28,6 +34,10 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     NgxGalleryModule,
     FileUploadModule,
     BsDatepickerModule,
-  ]
+    PaginationModule,
+    ButtonsModule,
+    TimeagoModule,
+  ],
+  providers: [TimeagoIntl],
 })
 export class SharedModule { }
