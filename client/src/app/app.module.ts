@@ -29,6 +29,7 @@ import { DateInputComponent } from './_forms/date-input/date-input.component';
 
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 defineLocale('pt-br', ptBrLocale); 
 
 @NgModule({
@@ -48,7 +49,8 @@ defineLocale('pt-br', ptBrLocale);
     MemberEditComponent,
     PhotoEditorComponent,
     TextInputComponent,
-    DateInputComponent
+    DateInputComponent,
+    MemberMessagesComponent
   ],
   imports: [
     BrowserModule,
