@@ -53,7 +53,10 @@ namespace API.Controllers
         [HttpGet("{userName}", Name = "GetUser")]
         public async Task<ActionResult<MemberDto>> GetUser(string userName)
         {
-            return await _unitOfWork.UserRepository.GetMemberAsync(userName);
+            var currentUsername = User.GetUsername();
+            return await _unitOfWork.UserRepository.GetMemberAsync(userName,
+                isCurrentUser: currentUsername == userName
+            );
         }
 
         [HttpPut]
@@ -76,25 +79,22 @@ namespace API.Controllers
             var result = await _photoService.AddPhotoAsync(file);
 
             if (result.Error != null) return BadRequest(result.Error.Message);
-
+            
             var photo = new Photo
             {
                 Url = result.SecureUrl.AbsoluteUri,
                 PublicId = result.PublicId
             };
-
-            if (user.Photos.Count == 0)
+            
+            user.Photos.Add(photo);
+            
+            if (await _unitOfWork.Complete())
             {
-                photo.IsMain = true;
+                return CreatedAtRoute("GetUser", new { username =
+                user.UserName }, _mapper.Map<PhotoDto>(photo));
             }
 
-            user.Photos.Add(photo);
-
-            if (await _unitOfWork.Complete())
-                return CreatedAtRoute("GetUser", new { UserName = user.UserName }, _mapper.Map<PhotoDto>(photo));
-
-
-            return BadRequest("Erro ao adicionar foto");
+            return BadRequest("Erro ao adicionar a foto");
         }
 
         [HttpPut("set-main-photo/{photoId}")]
@@ -117,10 +117,8 @@ namespace API.Controllers
 
         [HttpDelete("delete-photo/{photoId}")]
         public async Task<ActionResult> DeletePhoto(int photoId)
-        {
-            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());
-
-            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+        {            
+            var photo = await _unitOfWork.PhotoRepository.GetPhotoById(photoId);
 
             if (photo == null) return NotFound();
 
@@ -131,8 +129,8 @@ namespace API.Controllers
                 var result = await _photoService.DeletePhotoAsync(photo.PublicId);
                 if (result.Error != null) return BadRequest(result.Error.Message);
             }
-
-            user.Photos.Remove(photo);
+            
+            _unitOfWork.PhotoRepository.RemovePhoto(photo);
 
             if (await _unitOfWork.Complete()) return Ok();
 
