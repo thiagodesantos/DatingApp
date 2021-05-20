@@ -4,7 +4,6 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { error } from 'selenium-webdriver';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 

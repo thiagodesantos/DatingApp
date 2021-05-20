@@ -18,7 +18,7 @@ namespace API.SignalR
                     OnlineUsers[username].Add(connectionId);                
                 else 
                 {
-                    OnlineUsers.Add(username, new List<string>{connectionId});
+                    OnlineUsers.Add(username, new List<string> {connectionId});
                     isOnline = true;
                 }               
                     
