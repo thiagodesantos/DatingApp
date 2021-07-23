@@ -83,7 +83,7 @@ export class PhotoEditorComponent implements OnInit {
           break;
       }
   
-      console.log(message);
+      alert(message);
     }
   
 
