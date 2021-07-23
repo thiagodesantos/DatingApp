@@ -50,7 +50,18 @@ export class PhotoEditorComponent implements OnInit {
     })
   }
 
+  formatBytes(bytes, decimals?) {
+    if (bytes == 0) return '0 Bytes';
+    const k = 1024,
+      dm = decimals || 2,
+      sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+      i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
   initializeUploader() {
+    let maxFileSize = 50 * 1024 * 1024;
+
     this.uploader = new FileUploader({
       url: this.baseUlr + 'users/add-photo',
       authToken: 'Bearer ' + this.user.token,
@@ -58,8 +69,23 @@ export class PhotoEditorComponent implements OnInit {
       allowedFileType: ['image'],
       removeAfterUpload: true,
       autoUpload: false,
-      maxFileSize: 35 * 1024 * 1024
+      maxFileSize: maxFileSize
     });
+
+    this.uploader.onWhenAddingFileFailed = (item, filter) => {
+      let message = '';
+      switch (filter.name) {
+        case 'fileSize':
+          message = 'Warning ! \nThe uploaded file \"' + item.name + '\" is ' + this.formatBytes(item.size) + ', this exceeds the maximum allowed size of ' + this.formatBytes(maxFileSize);
+          break;
+        default:
+          message = 'Error trying to upload file '+item.name;
+          break;
+      }
+  
+      console.log(message);
+    }
+  
 
     this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
